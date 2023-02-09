@@ -14,4 +14,13 @@ $ npm config set registry=https://registry.npmmirror.com
 
 npm i -D vite-plugin-windicss windicss
 npm install vue-router@4
+
+npm install axios
+
+
+npm i @vueuse/integrations
+npm i universal-cookie
 ```
+
+
+API接口文档: http://dishaxy.dishait.cn/shopadminapi
