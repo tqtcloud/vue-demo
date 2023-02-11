@@ -20,6 +20,13 @@ npm install axios
 
 npm i @vueuse/integrations
 npm i universal-cookie
+
+# store 页面存储
+npm i vuex@next --save
+
+# 全局loading 进度条
+npm i nprogress
+# 前置守卫
 ```
 
 

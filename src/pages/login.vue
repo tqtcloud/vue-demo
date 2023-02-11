@@ -3,7 +3,7 @@
         <el-col :lg="16" :md="12" class="left">
             <div>
                 <div>欢迎光临</div>
-                <div>此站点是《vue3 + vite实战商城后台开发》视频课程的演示地址</div>
+                <div>学习模拟项目</div>
             </div>
         </el-col>
         <el-col :lg="8" :md="12" class="right">
@@ -37,13 +37,13 @@
 </template>
 
 <script setup>
-import { ref,reactive } from 'vue'
-import {login,getinfo} from '~/api/manager'
-import { ElNotification } from 'element-plus'
+import { ref,reactive,onMounted,onBeforeUnmount } from 'vue'
+import { toast } from '~/composables/util'
 import { useRouter } from 'vue-router'
-import { useCookies } from '@vueuse/integrations/useCookies'
+import { useStore } from 'vuex'
 
 
+const store = useStore()
 const router = useRouter()
 
 // do not use same name with ref
@@ -80,33 +80,34 @@ const onSubmit = () => {
             return false
         }
         loading.value = true
-        login(form.username,form.password)
-        .then(res=>{
-            // 提示成功
-            ElNotification({
-            message:  "登录成功",
-            type: 'success',
-            duration:3000
-            })
-            // 存储token相关信息
-            const cookies =  useCookies()
-            cookies.set("admin-token",res.token)
-
-            //获取用户 相关信息
-            getinfo().then(res2=>{
-                console.log(res2);
-            })
-            // 跳转到后台页面
+        store.dispatch("login",form).then(res=>{
+            // 登录成功提示，并存储token相关信息 在dispatch 中
+            toast("登录成功")
+             // 跳转到后台页面
             router.push('/')
-        })
-        .finally(()=>{
+        }).finally(()=>{
             // 请求之前为 false 可点击，请求完为false 不能点击
             loading.value = false
         })
 
     })
 }
+
+// 监听键盘事件
+function onKeyUp(e){
+    if(e.key == "Enter") onSubmit()
+}
+// 添加键盘监听
+// 页面渲染前添加
+onMounted(()=>{
+    document.addEventListener("keyup",onKeyUp)
+})
+// 页面卸载后移除
+onBeforeUnmount(()=>{
+    document.removeEventListener("keyup",onKeyUp)
+})
 </script>
+
 
 <style scoped>
 .login-container{
